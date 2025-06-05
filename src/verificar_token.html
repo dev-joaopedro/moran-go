@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Login - Verificação</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+      .flip-box {
+        perspective: 1000px;
+        width: 100%;
+      }
+      .flip-inner {
+        position: relative;
+        transition: transform 0.8s;
+        transform-style: preserve-3d;
+        width: 100%;
+      }
+      .flipped {
+        transform: rotateY(180deg);
+      }
+      .front,
+      .back {
+        position: absolute;
+        width: 100%;
+        backface-visibility: hidden;
+        top: 0;
+        left: 0;
+      }
+      .back {
+        transform: rotateY(180deg);
+      }
+    </style>
+  </head>
+
+  <body class="bg-[rgb(250,241,230)] flex items-center justify-center min-h-screen">
+    <div class="flip-box max-w-lg w-full">
+      <div id="flip-inner" class="flip-inner">
+
+        <!-- LOGIN FRONT -->
+        <div class="front bg-[rgb(242,228,197)] p-8 rounded-xl shadow-xl">
+          <h2 class="text-3xl font-semibold text-center text-[rgb(45,93,74)] mb-6">Bem-vindo!</h2>
+          <form id="login-form">
+            <div class="mb-4">
+              <label for="email" class="block text-sm font-medium text-[rgb(54,93,50)]">E-mail</label>
+              <input type="email" id="email" name="email" required
+                class="w-full mt-2 p-4 rounded-lg border border-[rgb(237,226,206)] focus:outline-none focus:ring-2 focus:ring-[rgb(45,93,74)]" />
+            </div>
+            <div class="mb-6">
+              <label for="password" class="block text-sm font-medium text-[rgb(54,93,50)]">Senha</label>
+              <input type="password" id="password" name="password" required
+                class="w-full mt-2 p-4 rounded-lg border border-[rgb(237,226,206)] focus:outline-none focus:ring-2 focus:ring-[rgb(45,93,74)]" />
+            </div>
+            <button type="submit"
+              class="w-full py-3 bg-[rgb(54,93,50)] text-white font-semibold rounded-lg hover:bg-[rgb(45,93,74)] transition duration-200 flex items-center justify-center gap-2">
+              <span>Entrar</span>
+            </button>
+          </form>
+        </div>
+
+        <!-- VERIFICAÇÃO BACK -->
+        <div class="back bg-[rgb(242,228,197)] p-8 rounded-xl shadow-xl">
+          <h2 class="text-3xl font-semibold text-center text-[rgb(45,93,74)] mb-6">Verificação em Duas Etapas</h2>
+          <p class="text-center mb-6 text-[rgb(75,75,75)]">
+            Enviamos um código para o e-mail <strong>{{.Email}}</strong>. Insira o código abaixo para continuar.
+          </p>
+          <form id="verify-form" action="/verificar-token-post" method="POST">
+            <input type="hidden" name="email" value="{{.Email}}" />
+            <div class="mb-4">
+              <label for="codigo" class="block text-sm font-medium text-[rgb(54,93,50)]">Código de Verificação</label>
+              <input type="text" id="codigo" name="codigo" maxlength="6" pattern="\d{6}" required
+                placeholder="Digite os 6 dígitos"
+                class="w-full p-4 mt-2 border border-[rgb(237,226,206)] rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-[rgb(45,93,74)] text-[rgb(75,75,75)] bg-white" />
+              <p class="text-sm text-[rgb(75,75,75)] mt-1">Apenas números. Ex: 123456</p>
+            </div>
+            <button type="submit" id="submit-btn"
+              class="w-full py-3 bg-[rgb(54,93,50)] text-white font-semibold rounded-lg hover:bg-[rgb(45,93,74)] transition duration-200 flex items-center justify-center gap-2">
+              <svg id="spinner" class="hidden animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg"
+                fill="none" viewBox="0 0 24 24">
+                <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                <path class="opacity-75" fill="currentColor"
+                  d="M4 12a8 8 0 018-8v8H4z"></path>
+              </svg>
+              <span id="btn-text">Verificar</span>
+            </button>
+          </form>
+
+          {{if .Error}}
+          <p class="mt-6 text-[rgb(207,77,69)] text-center font-medium">{{.Error}}</p>
+          {{end}}
+
+          <div class="mt-6 text-center">
+            <p class="text-[rgb(75,75,75)] text-sm mb-2">
+              Reenviar código em <span id="timer" class="font-semibold text-[rgb(45,93,74)]">60</span> segundos
+            </p>
+            <form action="/reenviar-codigo" method="POST">
+              <input type="hidden" name="email" value="{{.Email}}" />
+              <button type="submit" id="resend-btn" disabled
+                class="py-2 px-4 bg-[rgb(237,226,206)] text-[rgb(75,75,75)] rounded-lg font-medium hover:bg-[rgb(242,228,197)] disabled:opacity-50 disabled:cursor-not-allowed transition-all">
+                Reenviar Código
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      const loginForm = document.getElementById("login-form");
+      const flipBox = document.getElementById("flip-inner");
+
+      loginForm.addEventListener("submit", function (e) {
+        e.preventDefault();
+
+        // Simula envio do código (no real, você chamaria o backend)
+        setTimeout(() => {
+          flipBox.classList.add("flipped");
+        }, 500);
+      });
+
+      // Timer para reenviar
+      let timeLeft = 60;
+      const timerEl = document.getElementById('timer');
+      const resendBtn = document.getElementById('resend-btn');
+
+      const interval = setInterval(() => {
+        timeLeft--;
+        timerEl.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(interval);
+          resendBtn.disabled = false;
+          timerEl.textContent = "0";
+        }
+      }, 1000);
+
+      // Spinner no botão de verificar
+      const form = document.getElementById('verify-form');
+      const submitBtn = document.getElementById('submit-btn');
+      const spinner = document.getElementById('spinner');
+      const btnText = document.getElementById('btn-text');
+
+      form.addEventListener('submit', () => {
+        submitBtn.disabled = true;
+        spinner.classList.remove('hidden');
+        btnText.textContent = "Verificando...";
+      });
+    </script>
+  </body>
+</html>

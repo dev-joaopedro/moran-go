@@ -1,0 +1,201 @@
+info:
+  contact: {}
+paths:
+  /:
+    get:
+      consumes:
+      - text/html
+      description: Exibe a página inicial
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: Página index
+          schema:
+            type: string
+      summary: Página inicial
+      tags:
+      - Página
+  /agendamento:
+    get:
+      consumes:
+      - text/html
+      description: Exibe a página de agendamento
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: Página de agendamento
+          schema:
+            type: string
+      summary: Página de agendamento
+      tags:
+      - Agendamento
+  /cadastro:
+    get:
+      consumes:
+      - text/html
+      description: Exibe o formulário de cadastro
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: Formulário de cadastro
+          schema:
+            type: string
+      summary: Página de cadastro
+      tags:
+      - Cadastro
+  /login:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Realiza login com email e senha
+      parameters:
+      - description: E-mail
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Senha
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - text/html
+      responses:
+        "302":
+          description: Redireciona para verificação de token
+          schema:
+            type: string
+        "401":
+          description: Credenciais inválidas
+          schema:
+            type: string
+      summary: Login
+      tags:
+      - Autenticação
+  /reenviar-codigo:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Reenvia o código de verificação
+      parameters:
+      - description: E-mail
+        in: formData
+        name: email
+        required: true
+        type: string
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: Novo código enviado
+          schema:
+            type: string
+      summary: Reenvia código
+      tags:
+      - Autenticação
+  /registrar:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Realiza o cadastro de novo usuário
+      parameters:
+      - description: Nome
+        in: formData
+        name: nome
+        required: true
+        type: string
+      - description: E-mail
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Senha
+        in: formData
+        name: password
+        required: true
+        type: string
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: Cadastro realizado com sucesso
+          schema:
+            type: string
+        "400":
+          description: Erro ao cadastrar
+          schema:
+            type: string
+      summary: Cadastro de usuário
+      tags:
+      - Cadastro
+  /sucesso:
+    get:
+      consumes:
+      - text/html
+      description: Exibe mensagem após login/cadastro bem-sucedido
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: Página de sucesso
+          schema:
+            type: string
+      summary: Página de sucesso
+      tags:
+      - Página
+  /verificar-token:
+    get:
+      consumes:
+      - text/html
+      description: Exibe página para verificar o código enviado
+      parameters:
+      - description: E-mail
+        in: query
+        name: email
+        required: true
+        type: string
+      produces:
+      - text/html
+      responses:
+        "200":
+          description: Exibe formulário de verificação
+          schema:
+            type: string
+      summary: Página de verificação
+      tags:
+      - Autenticação
+  /verificar-token-post:
+    post:
+      consumes:
+      - application/x-www-form-urlencoded
+      description: Verifica o código enviado por email
+      parameters:
+      - description: E-mail
+        in: formData
+        name: email
+        required: true
+        type: string
+      - description: Código
+        in: formData
+        name: codigo
+        required: true
+        type: string
+      produces:
+      - text/html
+      responses:
+        "302":
+          description: Redireciona para página de sucesso
+          schema:
+            type: string
+        "400":
+          description: Código inválido ou expirado
+          schema:
+            type: string
+      summary: Verifica código 2FA
+      tags:
+      - Autenticação
+swagger: "2.0"
