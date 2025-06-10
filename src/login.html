@@ -18,11 +18,6 @@
         background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%232D5D4A' fill-opacity='0.05'%3E%3Cpath opacity='.5' d='M96 95h4v1h-4v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4h-9v4h-1v-4H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15v-9H0v-1h15V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h9V0h1v15h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9h4v1h-4v9zm-1 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm9-10v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-10 0v-9h-9v9h9zm-9-10h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9zm10 0h9v-9h-9v9z'/%3E%3Cpath d='M6 5V0H5v5H0v1h5v94h1V6h94V5H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
       }
 
-      .strawberry-bg {
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60' fill='none'%3E%3Cpath d='M30 10C26.5 10 23.75 15 23.75 15C23.75 15 21 10 17.5 10C13.75 10 11.25 12.5 11.25 16.25C11.25 22.5 17.5 27.5 18.75 28.75C21.25 31.25 23.75 33.75 23.75 33.75C23.75 33.75 26.25 31.25 28.75 28.75C30 27.5 36.25 22.5 36.25 16.25C36.25 12.5 33.75 10 30 10Z' fill='%23CF4D45' fill-opacity='0.1'/%3E%3C/svg%3E");
-        background-repeat: repeat;
-      }
-
       /* Flip styles */
       .login-container.perspective {
         perspective: 1000px;
@@ -51,78 +46,108 @@
         transform: rotateY(180deg);
       }
     </style>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("menuToggle");
+    const mobileMenu = document.getElementById("mobileMenu");
+
+    if (toggleBtn && mobileMenu) {
+      toggleBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+    }
+
+    const produtorBtn = document.getElementById("produtorBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
+
+    if (produtorBtn && dropdownMenu) {
+      produtorBtn.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("hidden");
+      });
+    }
+  });
+    </script>
   </head>
   <body class="bg-[#FAF1E6] text-[#4B4B4B] min-h-screen strawberry-bg">
     <!-- Header -->
-    <header class="sticky top-0 z-50 bg-[#FAF1E6] shadow-md">
-      <div class="container mx-auto py-4 px-6 flex items-center justify-between">
-        <a href="index.html">
-          <div class="flex items-center gap-3">
-          <div class="w-10 h-10 flex items-center justify-center">
-            <figure>
-              <img src="/static/imagens/morango.png" alt="logo morango" />
-            </figure>
-          </div>
-          <h1 class="text-2xl font-bold text-[#2D5D4A]">
-            Moran<span class="text-[#CF4D45]">.go</span>
-          </h1>
+    <header class="sticky top-0 z-[1100] bg-[#FAF1E6] shadow-md">
+  <div class="container mx-auto py-4 px-6 flex items-center justify-between">
+    <!-- LOGO -->
+    <a href="index.html">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 flex items-center justify-center">
+          <figure>
+            <img src="/static/imagens/morango.png" alt="logo morango" />
+          </figure>
         </div>
-        </a>
+        <h1 class="text-2xl font-bold text-[#2D5D4A]">
+          Moran<span class="text-[#CF4D45]">.go</span>
+        </h1>
+      </div>
+    </a>
 
-        <div class="flex items-center gap-4 relative">
-          <a href="index.html" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
-            >Início</a
-          >
-          {{ if .Nome }}
-          <!-- Menu dropdown -->
-          <div class="relative" id="produtorMenu">
-            <button
-              id="produtorBtn"
-              class="text-sm text-[#2D5D4A] font-semibold flex items-center gap-1 focus:outline-none"
-            >
-              {{.Nome}}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
-            </button>
-            <div
-              id="dropdownMenu"
-              class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-50"
-            >
-              <a
-                href="/dashboard"
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                >Dashboard</a
-              >
-              <a
-                href="/logout"
-                class="block px-4 py-2 text-red-600 hover:bg-red-100"
-                >Sair</a
-              >
-            </div>
-          </div>
-          {{ else }}
-          <a
-            href="/login"
-            class="px-6 py-3 rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300"
-            >Login Produtor</a
-          >
-          {{ end }}
+    <!-- BOTÃO HAMBURGUER MOBILE -->
+    <button id="menuToggle" class="md:hidden focus:outline-none">
+      <svg class="w-6 h-6 text-[#2D5D4A]" fill="none" stroke="currentColor" stroke-width="2"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
+
+    <!-- MENU DESKTOP -->
+    <nav
+      class="hidden md:flex items-center gap-4 relative"
+      id="desktopMenu">
+      <a href="#" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Sobre</a>
+      <a href="#sessao-mapa" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Mapa</a>
+      <a href="#sessao-contato" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Contato</a>
+
+      {{ if .Nome }}
+      <!-- DROPDOWN DESKTOP -->
+      <div class="relative" id="produtorMenu">
+        <button id="produtorBtn"
+          class="text-sm text-[#2D5D4A] font-semibold flex items-center gap-1 focus:outline-none">
+          {{.Nome}}
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div id="dropdownMenu"
+          class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-50">
+          <a href="/dashboard" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Dashboard</a>
+          <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-red-100">Sair</a>
         </div>
       </div>
-    </header>
+      {{ else }}
+      <a href="/login"
+        class="px-6 py-3 rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300">
+        Login do Produtor
+      </a>
+      {{ end }}
+    </nav>
+  </div>
+
+  <!-- MENU MOBILE -->
+  <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
+    <div class="flex flex-col gap-2">
+      <a href="#" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Sobre</a>
+      <a href="#sessao-mapa" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Mapa</a>
+      <a href="#sessao-contato" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Contato</a>
+      {{ if .Nome }}
+      <a href="/dashboard" class="text-[#2D5D4A] font-medium">Dashboard</a>
+      <a href="/logout" class="text-red-600 font-medium">Sair</a>
+      {{ else }}
+      <a href="/login"
+        class="block w-full px-6 py-3 text-center rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300">
+        Login do Produtor
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</header>
 
     <!-- Main Content -->
     <div class="container mx-auto px-6 py-16 flex flex-col items-center">

@@ -1,693 +1,733 @@
 <html lang="pt-br">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Moran.go - Página Inicial</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
-      rel="stylesheet"
-    />
-    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css"
-    />
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Moran.go - Página Inicial</title>
 
-    <script>
-      tailwind.config = {
-        theme: {
-          extend: {
-            colors: {
-              brand: {
-                primary: "#2D5D4A",
-                secondary: "#CF4D45",
-                accent: "#365D32",
-                neutral: "#FAF1E6",
-              },
-            },
-            fontFamily: {
-              sans: ["Inter", "sans-serif"],
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            brand: {
+              primary: "#2D5D4A",
+              secondary: "#CF4D45",
+              accent: "#365D32",
+              neutral: "#FAF1E6",
             },
           },
+          fontFamily: {
+            sans: ["Inter", "sans-serif"],
+          },
         },
-      };
-    </script>
+      },
+    };
 
-    <style>
-      body {
-        font-family: "Inter", sans-serif;
-      }
+   document.addEventListener("DOMContentLoaded", function () {
+    const toggleBtn = document.getElementById("menuToggle");
+    const mobileMenu = document.getElementById("mobileMenu");
 
-      #map {
-        height: 500px;
-        border-radius: 1rem;
-      }
+    if (toggleBtn && mobileMenu) {
+      toggleBtn.addEventListener("click", () => {
+        mobileMenu.classList.toggle("hidden");
+      });
+    }
 
-      .custom-marker {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        border-radius: 50%;
-        border: 2px solid white;
-        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-      }
-    </style>
-  </head>
+    const produtorBtn = document.getElementById("produtorBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
 
-  <body class="bg-[#FAF1E6] text-[#4B4B4B]">
-    <!-- MENU BARRA DE NAVEGAÇÃO DO SITE-->
-    <header class="sticky top-0 z-[1100] bg-[#FAF1E6] shadow-md">
-      <div
-        class="container mx-auto py-4 px-6 flex items-center justify-between"
-      >
-        <a href="index.html">
-          <div class="flex items-center gap-3">
-            <div class="w-10 h-10 flex items-center justify-center">
-              <figure>
-                <img src="/static/imagens/morango.png" alt="logo morango" />
-              </figure>
-            </div>
+    if (produtorBtn && dropdownMenu) {
+      produtorBtn.addEventListener("click", () => {
+        dropdownMenu.classList.toggle("hidden");
+      });
+    }
+  });
+  
+  </script>
 
-            <h1 class="text-2xl font-bold text-[#2D5D4A]">
-              Moran<span class="text-[#CF4D45]">.go</span>
-            </h1>
-          </div>
-        </a>
+  <style>
+    body {
+      font-family: "Inter", sans-serif;
+    }
 
-        <div class="flex items-center gap-4 relative">
-          <a href="#" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
-            >Sobre</a
-          >
-          <a
-            href="#sessao-mapa"
-            class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
-            >Mapa</a
-          >
-          <a
-            href="#sessao-contato"
-            class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
-            >Contato</a
-          >
-          {{ if .Nome }}
+    #map {
+      height: 500px;
+      border-radius: 1rem;
+    }
 
-          <!-- MENU DROPDOWN -->
-          <div class="relative" id="produtorMenu">
-            <button
-              id="produtorBtn"
-              class="text-sm text-[#2D5D4A] font-semibold flex items-center gap-1 focus:outline-none"
-            >
-              {{.Nome}}
-              <svg
-                class="w-4 h-4"
-                fill="none"
-                stroke="currentColor"
-                stroke-width="2"
-                viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg"
-                aria-hidden="true"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M19 9l-7 7-7-7"
-                ></path>
-              </svg>
-            </button>
+    .custom-marker {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      border: 2px solid white;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+    }
+  </style>
+</head>
 
-            <div
-              id="dropdownMenu"
-              class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-50"
-            >
-              <a
-                href="/dashboard"
-                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
-                >Dashboard</a
-              >
-              <a
-                href="/logout"
-                class="block px-4 py-2 text-red-600 hover:bg-red-100"
-                >Sair</a
-              >
-            </div>
-          </div>
+<body class="bg-[#FAF1E6] text-[#4B4B4B]">
+  <!-- MENU BARRA DE NAVEGAÇÃO DO SITE-->
+  <header class="sticky top-0 z-[1100] bg-[#FAF1E6] shadow-md">
+  <div class="container mx-auto py-4 px-6 flex items-center justify-between">
+    <!-- LOGO -->
+    <a href="index.html">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 flex items-center justify-center">
+          <figure>
+            <img src="/static/imagens/morango.png" alt="logo morango" />
+          </figure>
+        </div>
+        <h1 class="text-2xl font-bold text-[#2D5D4A]">
+          Moran<span class="text-[#CF4D45]">.go</span>
+        </h1>
+      </div>
+    </a>
 
-          {{ else }}
+    <!-- BOTÃO HAMBURGUER MOBILE -->
+    <button id="menuToggle" class="md:hidden focus:outline-none">
+      <svg class="w-6 h-6 text-[#2D5D4A]" fill="none" stroke="currentColor" stroke-width="2"
+        viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round"
+          d="M4 6h16M4 12h16M4 18h16" />
+      </svg>
+    </button>
 
-          <a
-            href="/login"
-            class="px-6 py-3 rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300"
-            >Login do Produtor</a
-          >
-          {{ end }}
+    <!-- MENU DESKTOP -->
+    <nav
+      class="hidden md:flex items-center gap-4 relative"
+      id="desktopMenu">
+      <a href="#" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Sobre</a>
+      <a href="#sessao-mapa" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Mapa</a>
+      <a href="#sessao-contato" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Contato</a>
+
+      {{ if .Nome }}
+      <!-- DROPDOWN DESKTOP -->
+      <div class="relative" id="produtorMenu">
+        <button id="produtorBtn"
+          class="text-sm text-[#2D5D4A] font-semibold flex items-center gap-1 focus:outline-none">
+          {{.Nome}}
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+
+        <div id="dropdownMenu"
+          class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-50">
+          <a href="/dashboard" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Dashboard</a>
+          <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-red-100">Sair</a>
         </div>
       </div>
-    </header>
+      {{ else }}
+      <a href="/login"
+        class="px-6 py-3 rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300">
+        Login do Produtor
+      </a>
+      {{ end }}
+    </nav>
+  </div>
 
-    <!-- BANNER INTERATIVO CARROSSEL DA PÁGINA PRINCIPAL -->
-    <div class="relative h-[500px] md:h-[500px] overflow-hidden z-[10]">
-      <div class="swiper bannerSwiper h-full">
-        <div class="swiper-wrapper">
-          <!-- SLIDE 1 -->
-          <div class="swiper-slide relative h-full">
-            <img
-              src="/static/imagens/banner-morango-inicial-1.jpg"
-              class="w-full h-full object-cover"
-            />
-          </div>
+  <!-- MENU MOBILE -->
+  <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
+    <div class="flex flex-col gap-2">
+      <a href="#" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Sobre</a>
+      <a href="#sessao-mapa" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Mapa</a>
+      <a href="#sessao-contato" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Contato</a>
+      {{ if .Nome }}
+      <a href="/dashboard" class="text-[#2D5D4A] font-medium">Dashboard</a>
+      <a href="/logout" class="text-red-600 font-medium">Sair</a>
+      {{ else }}
+      <a href="/login"
+        class="block w-full px-6 py-3 text-center rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300">
+        Login do Produtor
+      </a>
+      {{ end }}
+    </div>
+  </div>
+</header>
 
-          <!-- SLIDE 2 -->
-          <div class="swiper-slide relative h-full">
-            <img
-              src="/static/imagens/banner-morango-inicial-2.jpg"
-              alt="Plantação de Morangos"
-              class="w-full h-full object-cover"
-            />
-          </div>
+  <!-- BANNER INTERATIVO CARROSSEL DA PÁGINA PRINCIPAL -->
+  <div class="relative h-[500px] md:h-[500px] overflow-hidden z-[10]">
+    <div class="swiper bannerSwiper h-full">
+      <div class="swiper-wrapper">
+        <!-- SLIDE 1 -->
+        <div class="swiper-slide relative h-full">
+          <img src="/static/imagens/banner-morango-inicial-1.jpg" class="w-full h-full object-cover" />
+        </div>
 
-          <!-- SLIDE 3 -->
-          <div class="swiper-slide relative h-full">
-            <img
-              src="/static/imagens/banner-morango-inicial-3.jpg"
-              alt="Feira local"
-              class="w-full h-full object-cover"
-            />
-          </div>
+        <!-- SLIDE 2 -->
+        <div class="swiper-slide relative h-full">
+          <img src="/static/imagens/banner-morango-inicial-2.jpg" alt="Plantação de Morangos"
+            class="w-full h-full object-cover" />
+        </div>
+
+        <!-- SLIDE 3 -->
+        <div class="swiper-slide relative h-full">
+          <img src="/static/imagens/banner-morango-inicial-3.jpg" alt="Feira local"
+            class="w-full h-full object-cover" />
         </div>
       </div>
     </div>
+  </div>
 
-    <main class="max-w-7xl mx-auto px-6 py-16 space-y-20">
-      <!-- INFO / SOBRE -->
-      <section
-        class="bg-white rounded-3xl shadow-lg p-10 md:p-16"
-        aria-label="Sobre a plataforma Moran.go"
-      >
-        <header class="flex items-center gap-4 mb-8">
-          <img
-            src="/static/imagens/morango.png"
-            alt="Logo Moran.go"
-            class="w-10 h-10"
-          />
-          <h2 class="text-3xl font-extrabold text-brand-primary">Quem somos</h2>
-        </header>
-        <div class="prose prose-stone max-w-none leading-relaxed text-justify">
-          <p>
-            <span class="text-[#2D5D4A] font-bold">Moran</span
-            ><span class="text-[#CF4D45] font-bold">.go</span> nasceu com um
-            propósito simples e poderoso: aproximar produtores locais de quem
-            valoriza alimentos frescos, rastreáveis e cheios de sabor. Em um
-            país tão rico como o Brasil, percebemos que muitos agricultores
-            produzem com carinho, mas enfrentam dificuldades para alcançar o
-            público certo.
-          </p>
-          <br />
-          <p>
-            Criamos uma plataforma acessível, intuitiva e pensada para todos —
-            do pequeno produtor à família que busca qualidade na mesa. Com
-            Moran.go você encontra produtores da sua região, explora histórias,
-            visualiza seus produtos em um mapa interativo e agenda o contato
-            direto.
-          </p>
-          <br />
-          <p>
-            Mais do que um aplicativo, somos o elo que une o campo à cidade. Um
-            espaço onde tradição e tecnologia se encontram para valorizar quem
-            cultiva com amor e conectar quem consome com consciência.
-          </p>
-        </div>
-      </section>
-
-      <!-- MAPA -->
-      <section
-        id="sessao-mapa"
-        aria-label="Mapa interativo de produtores"
-        class="space-y-6 z-5"
-      >
-        <h2
-          class="text-3xl font-bold text-brand-primary text-center md:text-left"
-        >
-          Mapa Interativo
-        </h2>
-        <div id="map" class="h-[500px] w-full rounded-3xl shadow-lg z-2 border-4 border-white"></div>
-      </section>
-
-      <!-- PRODUTOR EM DESTAQUE -->
-      <section aria-labelledby="destaque-heading">
-        <h2
-          id="destaque-heading"
-          class="text-3xl font-bold text-brand-primary mb-6 text-center md:text-left"
-        >
-          Produtor em Destaque
-        </h2>
-        <div
-          class="flex flex-col md:flex-row gap-8 bg-white rounded-3xl shadow-lg overflow-hidden"
-        >
-          <!-- Perfil -->
-          <div class="md:w-1/2 p-8 space-y-4">
-            <header class="flex items-center gap-3">
-              <span
-                class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-neutral font-semibold text-brand-primary"
-                >JM</span
-              >
-              <h3 class="text-xl font-bold text-brand-primary">
-                João Morangos
-              </h3>
-            </header>
-            <div class="flex flex-wrap gap-2">
-              <span
-                class="px-3 py-1 rounded-full text-xs font-medium bg-brand-accent text-white"
-                >Orgânico</span
-              >
-              <span
-                class="px-3 py-1 rounded-full text-xs font-medium bg-brand-secondary text-white"
-                >Entrega</span
-              >
-            </div>
-            <ul class="text-sm text-stone-700 space-y-1">
-              <li>
-                <strong class="text-brand-primary">Telefone:</strong> (35)
-                99999‑9999
-              </li>
-              <li>
-                <strong class="text-brand-primary">Localização:</strong> Pouso
-                Alegre – MG
-              </li>
-            </ul>
-            <p class="text-sm leading-relaxed text-justify">
-              "Nossa produção familiar de morangos orgânicos existe há mais de
-              15 anos. Cuidamos de cada muda com carinho e colhemos apenas no
-              ponto certo, garantindo sabor inigualável e qualidade
-              certificada."
-            </p>
-          </div>
-
-          <!-- Galeria -->
-          <div class="md:w-1/2 p-8 flex items-center justify-center">
-            <div
-              class="relative w-full max-w-md aspect-square overflow-hidden rounded-2xl shadow-lg"
-            >
-              <div
-                id="carousel"
-                class="flex transition-transform duration-500 h-full w-full"
-              >
-                <img
-                  src="/static/imagens/producao-morango1.jpg"
-                  alt="Estufa de produção"
-                  class="min-w-full h-full object-cover"
-                />
-                <img
-                  src="/static/imagens/producao-morango3.jpg"
-                  alt="Cestas de morangos"
-                  class="min-w-full h-full object-cover"
-                />
-                <img
-                  src="https://via.placeholder.com/800x800?text=Foto+3"
-                  alt="Colheita"
-                  class="min-w-full h-full object-cover"
-                />
-              </div>
-
-              <!-- Nav -->
-              <button
-                onclick="prevSlide()"
-                class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 rounded-full shadow"
-                aria-label="Slide anterior"
-              >
-                «
-              </button>
-              <button
-                onclick="nextSlide()"
-                class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 rounded-full shadow"
-                aria-label="Próximo slide"
-              >
-                »
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <!-- LISTA DE PRODUTORES (cards) -->
-      <section aria-labelledby="produtores-heading" class="space-y-8">
-        <header
-          class="flex flex-col items-center md:items-start gap-4 text-center md:text-left"
-        >
-          <h2
-            id="produtores-heading"
-            class="text-3xl font-bold text-brand-primary"
-          >
-            Produtores próximos
-          </h2>
-          <p class="max-w-2xl">
-            Descubra produtores verificados e abasteça-se com morangos de
-            qualidade, direto de quem produz.
-          </p>
-        </header>
-
-        <div
-          class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
-          id="producersGrid"
-        >
-          <!-- Cards gerados dinamicamente ou renderizados pelo backend -->
-          <!-- Exemplo de card (mantém padrão para replicação) -->
-          <article
-            class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg"
-          >
-            <div
-              class="h-40 bg-brand-neutral flex items-center justify-center relative"
-            >
-              <span
-                class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white"
-                >Orgânico</span
-              >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="w-14 h-14 text-brand-secondary/70"
-                viewBox="0 0 24 24"
-                fill="currentColor"
-              >
-                <path
-                  d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z"
-                />
-              </svg>
-            </div>
-            <div class="p-6 space-y-3">
-              <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
-              <p class="text-sm">
-                Produção orgânica certificada, morangos frescos colhidos no dia.
-              </p>
-              <a
-                href="#"
-                class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition"
-                >Ver detalhes</a
-              >
-            </div>
-          </article>
-          <!-- Repita conforme necessário -->
-        </div>
-
-        <div class="flex justify-center pt-4">
-          <a
-            href="#"
-            class="px-6 py-3 rounded-lg border-2 border-brand-primary text-brand-primary font-semibold hover:bg-brand-primary hover:text-white transition"
-            >Ver mais produtores</a
-          >
-        </div>
-      </section>
-
-      <!-- FEATURES -->
-      <section
-        aria-labelledby="beneficios-heading"
-        class="py-16 text-center bg-brand-neutral rounded-3xl shadow-inner"
-      >
-        <h2
-          id="beneficios-heading"
-          class="text-3xl font-bold text-brand-primary mb-8"
-        >
-          Por que escolher a Moran.go?
-        </h2>
-        <div class="grid gap-10 lg:grid-cols-3">
-          <div
-            class="bg-white rounded-3xl p-8 shadow hover:shadow-lg transition"
-          >
-            <div
-              class="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-neutral flex items-center justify-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 text-brand-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M17.657 16.657 13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-                />
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-brand-primary mb-2">
-              Produtores locais
-            </h3>
-            <p>
-              Reduza distâncias e incentive a economia regional comprando direto
-              de quem planta.
-            </p>
-          </div>
-          <div
-            class="bg-white rounded-3xl p-8 shadow hover:shadow-lg transition"
-          >
-            <div
-              class="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-neutral flex items-center justify-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 text-brand-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                />
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-brand-primary mb-2">
-              Qualidade garantida
-            </h3>
-            <p>
-              Produtores verificados, práticas sustentáveis e rastreabilidade
-              total do plantio até a entrega.
-            </p>
-          </div>
-          <div
-            class="bg-white rounded-3xl p-8 shadow hover:shadow-lg transition"
-          >
-            <div
-              class="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-neutral flex items-center justify-center"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                class="h-8 w-8 text-brand-primary"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
-                stroke-width="2"
-              >
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
-                />
-              </svg>
-            </div>
-            <h3 class="text-xl font-bold text-brand-primary mb-2">
-              Agendamento fácil
-            </h3>
-            <p>
-              Escolha o melhor dia e horário para retirar ou receber seus
-              morangos sem complicação.
-            </p>
-          </div>
-        </div>
-      </section>
-
-      <!-- CTA -->
-      <section
-        class="text-center bg-brand-primary text-white rounded-3xl py-16 px-8 space-y-6 shadow-lg"
-      >
-        <h2 class="text-3xl font-bold">É produtor de morangos?</h2>
-        <p class="max-w-xl mx-auto">
-          Cadastre-se gratuitamente na plataforma e comece a vender diretamente
-          para consumidores apaixonados por qualidade.
+  <main class="max-w-7xl mx-auto px-6 py-16 space-y-20">
+    <!-- INFO / SOBRE -->
+    <section class="bg-white rounded-3xl shadow-lg p-10 md:p-16" aria-label="Sobre a plataforma Moran.go">
+      <header class="flex items-center gap-4 mb-8">
+        <img src="/static/imagens/morango.png" alt="Logo Moran.go" class="w-10 h-10" />
+        <h2 class="text-3xl font-extrabold text-brand-primary">Quem somos</h2>
+      </header>
+      <div class="prose prose-stone max-w-none leading-relaxed text-justify">
+        <p>
+          <span class="text-[#2D5D4A] font-bold">Moran</span><span class="text-[#CF4D45] font-bold">.go</span> nasceu
+          com um
+          propósito simples e poderoso: aproximar produtores locais de quem
+          valoriza alimentos frescos, rastreáveis e cheios de sabor. Em um
+          país tão rico como o Brasil, percebemos que muitos agricultores
+          produzem com carinho, mas enfrentam dificuldades para alcançar o
+          público certo.
         </p>
-        <a
-          href="/registrar"
-          class="inline-block bg-white text-brand-primary px-8 py-3 rounded-lg font-bold hover:bg-brand-neutral transition"
-          >Cadastrar como Produtor</a
-        >
-      </section>
-    </main>
+        <br />
+        <p>
+          Criamos uma plataforma acessível, intuitiva e pensada para todos —
+          do pequeno produtor à família que busca qualidade na mesa. Com
+          Moran.go você encontra produtores da sua região, explora histórias,
+          visualiza seus produtos em um mapa interativo e agenda o contato
+          direto.
+        </p>
+        <br />
+        <p>
+          Mais do que um aplicativo, somos o elo que une o campo à cidade. Um
+          espaço onde tradição e tecnologia se encontram para valorizar quem
+          cultiva com amor e conectar quem consome com consciência.
+        </p>
+      </div>
+    </section>
 
-    <!-- Footer -->
-    <footer id="sessao-contato" class="bg-[#2D5D4A] text-white py-10">
-      <div class="container mx-auto px-6">
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-          <div>
-            <h3 class="text-xl font-bold mb-4">
-              Moran<span class="text-[#CF4D45]">.go</span>
+    <!-- MAPA -->
+    <section id="sessao-mapa" aria-label="Mapa interativo de produtores" class="space-y-6 z-5">
+      <h2 class="text-3xl font-bold text-brand-primary text-center md:text-left">
+        Mapa Interativo
+      </h2>
+      <div id="map" class="h-[500px] w-full rounded-3xl shadow-lg z-2 border-4 border-white"></div>
+    </section>
+
+    <!-- PRODUTOR EM DESTAQUE -->
+    <section aria-labelledby="destaque-heading">
+      <h2 id="destaque-heading" class="text-3xl font-bold text-brand-primary mb-6 text-center md:text-left">
+        Produtor em Destaque
+      </h2>
+      <div class="flex flex-col md:flex-row gap-8 bg-white rounded-3xl shadow-lg overflow-hidden">
+        <!-- Perfil -->
+        <div class="md:w-1/2 p-8 space-y-4">
+          <header class="flex items-center gap-3">
+            <span
+              class="inline-flex items-center justify-center w-12 h-12 rounded-full bg-brand-neutral font-semibold text-brand-primary">JM</span>
+            <h3 class="text-xl font-bold text-brand-primary">
+              João Morangos
             </h3>
-            <p class="text-sm text-gray-300">
-              Conectando consumidores a produtores de morango de forma
-              sustentável e direta.
-            </p>
+          </header>
+          <div class="flex flex-wrap gap-2">
+            <span class="px-3 py-1 rounded-full text-xs font-medium bg-brand-accent text-white">Orgânico</span>
+            <span class="px-3 py-1 rounded-full text-xs font-medium bg-brand-secondary text-white">Entrega</span>
           </div>
-
-          <div>
-            <h3 class="text-lg font-bold mb-4">Links Úteis</h3>
-            <ul class="space-y-2">
-              <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-white"
-                  >Sobre nós</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-white"
-                  >Como funciona</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-white"
-                  >Termos de uso</a
-                >
-              </li>
-              <li>
-                <a href="#" class="text-sm text-gray-300 hover:text-white"
-                  >Política de privacidade</a
-                >
-              </li>
-            </ul>
-          </div>
-
-          <div>
-            <h3 class="text-lg font-bold mb-4">Contato</h3>
-            <ul class="space-y-2">
-              <li class="text-sm text-gray-300">contato@morango.com.br</li>
-              <li class="text-sm text-gray-300">(11) 99999-9999</li>
-              <li class="text-sm text-gray-300">São Paulo, SP</li>
-            </ul>
-          </div>
+          <ul class="text-sm text-stone-700 space-y-1">
+            <li>
+              <strong class="text-brand-primary">Telefone:</strong> (35)
+              99999‑9999
+            </li>
+            <li>
+              <strong class="text-brand-primary">Localização:</strong> Pouso
+              Alegre – MG
+            </li>
+          </ul>
+          <p class="text-sm leading-relaxed text-justify">
+            "Nossa produção familiar de morangos orgânicos existe há mais de
+            15 anos. Cuidamos de cada muda com carinho e colhemos apenas no
+            ponto certo, garantindo sabor inigualável e qualidade
+            certificada."
+          </p>
         </div>
 
-        <div
-          class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-[#FAF1E6]"
-        >
-          <p>© 2023 Moran.go - Todos os direitos reservados</p>
+        <!-- Galeria -->
+        <div class="md:w-1/2 p-8 flex items-center justify-end">
+          <div class="relative w-full max-w-md aspect-square overflow-hidden rounded-2xl shadow-lg">
+            <div id="carousel" class="flex transition-transform duration-500 h-full w-full">
+              <img src="/static/imagens/Gemini_Generated_1.jpg" alt="Estufa de produção"
+                class="min-w-full h-full object-cover" />
+              <img src="/static/imagens/Gemini_Generated_2.jpg" alt="Cestas de morangos"
+                class="min-w-full h-full object-cover" />
+              <img src="/static/imagens/Gemini_Generated_3.jpg" alt="Colheita" class="min-w-full h-full object-cover" />
+            </div>
+
+            <!-- Nav -->
+            <button onclick="prevSlide()"
+              class="absolute left-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 rounded-full shadow"
+              aria-label="Slide anterior">
+              «
+            </button>
+            <button onclick="nextSlide()"
+              class="absolute right-2 top-1/2 -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 rounded-full shadow"
+              aria-label="Próximo slide">
+              »
+            </button>
+          </div>
         </div>
       </div>
-    </footer>
+    </section>
 
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    <script>
-      // Inicializar o mapa
-      var map = L.map("map").setView([-22.230891, -45.936821], 10);
+    <!-- LISTA DE PRODUTORES (cards) -->
+    <section aria-labelledby="produtores-heading" class="space-y-8">
+      <header class="flex flex-col items-center md:items-start gap-4 text-center md:text-left">
+        <h2 id="produtores-heading" class="text-3xl font-bold text-brand-primary">
+          Produtores próximos
+        </h2>
+        <p class="max-w-2xl">
+          Descubra produtores verificados e abasteça-se com morangos de
+          qualidade, direto de quem produz.
+        </p>
+      </header>
 
-      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-        attribution: "© OpenStreetMap contributors",
-      }).addTo(map);
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" id="producersGrid">
+        <!-- Cards gerados dinamicamente ou renderizados pelo backend -->
+        <!-- Exemplo de card (mantém padrão para replicação) -->
+        <article
+          class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg">
+          <div class="h-40 bg-brand-neutral flex items-center justify-center relative">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white">Orgânico</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-brand-secondary/70" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z" />
+            </svg>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
+            <p class="text-sm">
+              Produção orgânica certificada, morangos frescos colhidos no dia.
+            </p>
+            <a href="#"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition">Ver
+              detalhes</a>
+          </div>
+        </article>
 
-      let currentIndex = 0;
-      const carousel = document.getElementById("carousel");
-      const totalSlides = carousel.children.length;
+        <article
+          class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg">
+          <div class="h-40 bg-brand-neutral flex items-center justify-center relative">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white">Orgânico</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-brand-secondary/70" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z" />
+            </svg>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
+            <p class="text-sm">
+              Produção orgânica certificada, morangos frescos colhidos no dia.
+            </p>
+            <a href="#"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition">Ver
+              detalhes</a>
+          </div>
+        </article>
 
-      function updateSlide() {
-        const slideWidth = carousel.children[0].clientWidth;
-        carousel.style.transform = `translateX(-${
-          currentIndex * slideWidth
+        <article
+          class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg">
+          <div class="h-40 bg-brand-neutral flex items-center justify-center relative">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white">Orgânico</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-brand-secondary/70" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z" />
+            </svg>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
+            <p class="text-sm">
+              Produção orgânica certificada, morangos frescos colhidos no dia.
+            </p>
+            <a href="#"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition">Ver
+              detalhes</a>
+          </div>
+        </article>
+
+        <article
+          class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg">
+          <div class="h-40 bg-brand-neutral flex items-center justify-center relative">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white">Orgânico</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-brand-secondary/70" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z" />
+            </svg>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
+            <p class="text-sm">
+              Produção orgânica certificada, morangos frescos colhidos no dia.
+            </p>
+            <a href="#"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition">Ver
+              detalhes</a>
+          </div>
+        </article>
+
+        <article
+          class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg">
+          <div class="h-40 bg-brand-neutral flex items-center justify-center relative">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white">Orgânico</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-brand-secondary/70" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z" />
+            </svg>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
+            <p class="text-sm">
+              Produção orgânica certificada, morangos frescos colhidos no dia.
+            </p>
+            <a href="#"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition">Ver
+              detalhes</a>
+          </div>
+        </article>
+
+        <article
+          class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg">
+          <div class="h-40 bg-brand-neutral flex items-center justify-center relative">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white">Orgânico</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-brand-secondary/70" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z" />
+            </svg>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
+            <p class="text-sm">
+              Produção orgânica certificada, morangos frescos colhidos no dia.
+            </p>
+            <a href="#"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition">Ver
+              detalhes</a>
+          </div>
+        </article>
+
+        <article
+          class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg">
+          <div class="h-40 bg-brand-neutral flex items-center justify-center relative">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white">Orgânico</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-brand-secondary/70" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z" />
+            </svg>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
+            <p class="text-sm">
+              Produção orgânica certificada, morangos frescos colhidos no dia.
+            </p>
+            <a href="#"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition">Ver
+              detalhes</a>
+          </div>
+        </article>
+
+        <article
+          class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg">
+          <div class="h-40 bg-brand-neutral flex items-center justify-center relative">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white">Orgânico</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-brand-secondary/70" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z" />
+            </svg>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
+            <p class="text-sm">
+              Produção orgânica certificada, morangos frescos colhidos no dia.
+            </p>
+            <a href="#"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition">Ver
+              detalhes</a>
+          </div>
+        </article>
+
+        <article
+          class="group relative overflow-hidden rounded-3xl bg-white shadow transition hover:-translate-y-1 hover:shadow-lg">
+          <div class="h-40 bg-brand-neutral flex items-center justify-center relative">
+            <span
+              class="absolute top-3 right-3 px-3 py-1 rounded-full text-xs font-semibold bg-brand-accent text-white">Orgânico</span>
+            <svg xmlns="http://www.w3.org/2000/svg" class="w-14 h-14 text-brand-secondary/70" viewBox="0 0 24 24"
+              fill="currentColor">
+              <path
+                d="M16.5 3C13.605 3 12 5.09 12 5.09S10.395 3 7.5 3 2 5.462 2 8.5c0 4.171 4.912 8.213 6.281 9.49C9.858 19.46 12 21.35 12 21.35s2.142-1.89 3.719-3.36C17.088 16.713 22 12.671 22 8.5 22 5.462 19.538 3 16.5 3z" />
+            </svg>
+          </div>
+          <div class="p-6 space-y-3">
+            <p class="text-sm text-stone-500">Atibaia, SP • 15 km</p>
+            <p class="text-sm">
+              Produção orgânica certificada, morangos frescos colhidos no dia.
+            </p>
+            <a href="#"
+              class="inline-flex items-center gap-2 px-4 py-2 rounded-lg border-2 border-brand-primary text-brand-primary text-sm font-semibold group-hover:bg-brand-primary group-hover:text-white transition">Ver
+              detalhes</a>
+          </div>
+        </article>
+        <!-- Repita conforme necessário -->
+      </div>
+
+      <div class="flex justify-center pt-4">
+        <a href="#"
+          class="px-6 py-3 rounded-lg border-2 border-brand-primary text-brand-primary font-semibold hover:bg-brand-primary hover:text-white transition">Ver
+          mais produtores</a>
+      </div>
+    </section>
+
+    <!-- FEATURES -->
+    <section aria-labelledby="beneficios-heading" class="py-16 text-center bg-brand-neutral rounded-3xl shadow-inner">
+      <h2 id="beneficios-heading" class="text-3xl font-bold text-brand-primary mb-8">
+        Por que escolher a Moran.go?
+      </h2>
+      <div class="grid gap-10 lg:grid-cols-3">
+        <div class="bg-white rounded-3xl p-8 shadow hover:shadow-lg transition">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-neutral flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-brand-primary" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M17.657 16.657 13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+              <path stroke-linecap="round" stroke-linejoin="round" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-brand-primary mb-2">
+            Produtores locais
+          </h3>
+          <p>
+            Reduza distâncias e incentive a economia regional comprando direto
+            de quem planta.
+          </p>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow hover:shadow-lg transition">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-neutral flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-brand-primary" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round"
+                d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-brand-primary mb-2">
+            Qualidade garantida
+          </h3>
+          <p>
+            Produtores verificados, práticas sustentáveis e rastreabilidade
+            total do plantio até a entrega.
+          </p>
+        </div>
+        <div class="bg-white rounded-3xl p-8 shadow hover:shadow-lg transition">
+          <div class="w-16 h-16 mx-auto mb-4 rounded-full bg-brand-neutral flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-brand-primary" fill="none" viewBox="0 0 24 24"
+              stroke="currentColor" stroke-width="2">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+            </svg>
+          </div>
+          <h3 class="text-xl font-bold text-brand-primary mb-2">
+            Agendamento fácil
+          </h3>
+          <p>
+            Escolha o melhor dia e horário para retirar ou receber seus
+            morangos sem complicação.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="text-center bg-brand-primary text-white rounded-3xl py-16 px-8 space-y-6 shadow-lg">
+      <h2 class="text-3xl font-bold">É produtor de morangos?</h2>
+      <p class="max-w-xl mx-auto">
+        Cadastre-se gratuitamente na plataforma e comece a vender diretamente
+        para consumidores apaixonados por qualidade.
+      </p>
+      <a href="/registrar"
+        class="inline-block bg-white text-brand-primary px-8 py-3 rounded-lg font-bold hover:bg-brand-neutral transition">Cadastrar
+        como Produtor</a>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer id="sessao-contato" class="bg-[#2D5D4A] text-white py-10">
+    <div class="container mx-auto px-6">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div>
+          <h3 class="text-xl font-bold mb-4">
+            Moran<span class="text-[#CF4D45]">.go</span>
+          </h3>
+          <p class="text-sm text-gray-300">
+            Conectando consumidores a produtores de morango de forma
+            sustentável e direta.
+          </p>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold mb-4">Links Úteis</h3>
+          <ul class="space-y-2">
+            <li>
+              <a href="#" class="text-sm text-gray-300 hover:text-white">Sobre nós</a>
+            </li>
+            <li>
+              <a href="#" class="text-sm text-gray-300 hover:text-white">Como funciona</a>
+            </li>
+            <li>
+              <a href="#" class="text-sm text-gray-300 hover:text-white">Termos de uso</a>
+            </li>
+            <li>
+              <a href="#" class="text-sm text-gray-300 hover:text-white">Política de privacidade</a>
+            </li>
+          </ul>
+        </div>
+
+        <div>
+          <h3 class="text-lg font-bold mb-4">Contato</h3>
+          <ul class="space-y-2">
+            <li class="text-sm text-gray-300">contato@morango.com.br</li>
+            <li class="text-sm text-gray-300">(11) 99999-9999</li>
+            <li class="text-sm text-gray-300">São Paulo, SP</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-[#FAF1E6]">
+        <p>© 2023 Moran.go - Todos os direitos reservados</p>
+      </div>
+    </div>
+  </footer>
+
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+  <script>
+    // Inicializar o mapa
+    var map = L.map("map").setView([-22.230891, -45.936821], 10);
+
+    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+      attribution: "© OpenStreetMap contributors",
+    }).addTo(map);
+
+    let currentIndex = 0;
+    const carousel = document.getElementById("carousel");
+    const totalSlides = carousel.children.length;
+
+    function updateSlide() {
+      const slideWidth = carousel.children[0].clientWidth;
+      carousel.style.transform = `translateX(-${currentIndex * slideWidth
         }px)`;
-      }
+    }
 
-      function nextSlide() {
-        currentIndex = (currentIndex + 1) % totalSlides;
-        updateSlide();
-      }
+    function nextSlide() {
+      currentIndex = (currentIndex + 1) % totalSlides;
+      updateSlide();
+    }
 
-      function prevSlide() {
-        currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-        updateSlide();
-      }
+    function prevSlide() {
+      currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+      updateSlide();
+    }
 
-      // (Opcional) Autoplay a cada 6s
-      setInterval(nextSlide, 6000);
-    </script>
+    // (Opcional) Autoplay a cada 6s
+    setInterval(nextSlide, 6000);
+  </script>
 
-    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
-    <script>
-      const swiper = new Swiper(".bannerSwiper", {
-        loop: true,
-        autoplay: {
-          delay: 5000,
-          disableOnInteraction: false,
-        },
-        effect: "fade",
-        fadeEffect: { crossFade: true },
-      });
-    </script>
-    <script>
-      (function () {
-        function c() {
-          var b = a.contentDocument || a.contentWindow.document;
-          if (b) {
-            var d = b.createElement("script");
-            d.innerHTML =
-              "window.__CF$cv$params={r:'93fdf674e32b6ead',t:'MTc0NzI2MzExMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
-            b.getElementsByTagName("head")[0].appendChild(d);
-          }
+  <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+  <script>
+    const swiper = new Swiper(".bannerSwiper", {
+      loop: true,
+      autoplay: {
+        delay: 5000,
+        disableOnInteraction: false,
+      },
+      effect: "fade",
+      fadeEffect: { crossFade: true },
+    });
+  </script>
+  <script>
+    (function () {
+      function c() {
+        var b = a.contentDocument || a.contentWindow.document;
+        if (b) {
+          var d = b.createElement("script");
+          d.innerHTML =
+            "window.__CF$cv$params={r:'93fdf674e32b6ead',t:'MTc0NzI2MzExMi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";
+          b.getElementsByTagName("head")[0].appendChild(d);
         }
-        if (document.body) {
-          var a = document.createElement("iframe");
-          a.height = 1;
-          a.width = 1;
-          a.style.position = "absolute";
-          a.style.top = 0;
-          a.style.left = 0;
-          a.style.border = "none";
-          a.style.visibility = "hidden";
-          document.body.appendChild(a);
-          if ("loading" !== document.readyState) c();
-          else if (window.addEventListener)
-            document.addEventListener("DOMContentLoaded", c);
-          else {
-            var e = document.onreadystatechange || function () {};
-            document.onreadystatechange = function (b) {
-              e(b);
-              "loading" !== document.readyState &&
-                ((document.onreadystatechange = e), c());
-            };
-          }
+      }
+      if (document.body) {
+        var a = document.createElement("iframe");
+        a.height = 1;
+        a.width = 1;
+        a.style.position = "absolute";
+        a.style.top = 0;
+        a.style.left = 0;
+        a.style.border = "none";
+        a.style.visibility = "hidden";
+        document.body.appendChild(a);
+        if ("loading" !== document.readyState) c();
+        else if (window.addEventListener)
+          document.addEventListener("DOMContentLoaded", c);
+        else {
+          var e = document.onreadystatechange || function () { };
+          document.onreadystatechange = function (b) {
+            e(b);
+            "loading" !== document.readyState &&
+              ((document.onreadystatechange = e), c());
+          };
         }
-      })();
-    </script>
-    <iframe
-      height="1"
-      width="1"
-      style="
+      }
+    })();
+  </script>
+  <iframe height="1" width="1" style="
         position: absolute;
         top: 0px;
         left: 0px;
         border: none;
         visibility: hidden;
-      "
-    ></iframe>
+      "></iframe>
 
-    <script>
-      // Alterna a visibilidade do menu dropdown
-      const produtorBtn = document.getElementById("produtorBtn");
-      const dropdownMenu = document.getElementById("dropdownMenu");
+  <script>
+    // Alterna a visibilidade do menu dropdown
+    const produtorBtn = document.getElementById("produtorBtn");
+    const dropdownMenu = document.getElementById("dropdownMenu");
 
-      produtorBtn?.addEventListener("click", function (e) {
-        e.stopPropagation(); // Evita que o clique feche imediatamente
-        dropdownMenu.classList.toggle("hidden");
-      });
+    produtorBtn?.addEventListener("click", function (e) {
+      e.stopPropagation(); // Evita que o clique feche imediatamente
+      dropdownMenu.classList.toggle("hidden");
+    });
 
-      // Fecha o dropdown ao clicar fora
-      document.addEventListener("click", function (e) {
-        if (!document.getElementById("produtorMenu")?.contains(e.target)) {
-          dropdownMenu?.classList.add("hidden");
-        }
-      });
-    </script>
-  </body>
+    // Fecha o dropdown ao clicar fora
+    document.addEventListener("click", function (e) {
+      if (!document.getElementById("produtorMenu")?.contains(e.target)) {
+        dropdownMenu?.classList.add("hidden");
+      }
+    });
+  </script>
+</body>
+
 </html>
