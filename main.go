@@ -6,9 +6,12 @@ import (
 	"encoding/json"
 	"fmt"
 	"html/template"
+	"io"
 	"log"
 	"net/http"
 	"net/smtp"
+	"os"
+	"path/filepath"
 	"strings"
 	"time"
 
@@ -42,6 +45,156 @@ type User struct {
 	Email    string
 	Telefone string
 	Endereco string
+}
+
+// Adicione esta struct ao seu código
+type DashboardData struct {
+    PageData
+    Imagens []string
+}
+
+// Handler para upload de imagens
+func uploadImagemHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodPost {
+        http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+        return
+    }
+
+    // Limite de 10MB para upload
+    err := r.ParseMultipartForm(10 << 20)
+    if err != nil {
+        http.Error(w, "Arquivo muito grande (máximo 10MB)", http.StatusBadRequest)
+        return
+    }
+
+    file, handler, err := r.FormFile("imagem")
+    if err != nil {
+        http.Error(w, "Erro ao obter arquivo", http.StatusBadRequest)
+        return
+    }
+    defer file.Close()
+
+    // Obter email do usuário logado
+    email := getEmailDoUsuario(r)
+    if email == "" {
+        http.Error(w, "Usuário não autenticado", http.StatusUnauthorized)
+        return
+    }
+
+    // Obter ID do usuário
+    var userID int
+    err = db.QueryRow("SELECT id FROM users WHERE email = ?", email).Scan(&userID)
+    if err != nil {
+        http.Error(w, "Erro ao identificar usuário", http.StatusInternalServerError)
+        return
+    }
+
+    // Criar diretório de uploads se não existir
+    uploadDir := "./static/uploads"
+    if _, err := os.Stat(uploadDir); os.IsNotExist(err) {
+        os.MkdirAll(uploadDir, 0755)
+    }
+
+    // Gerar nome único para o arquivo
+    ext := filepath.Ext(handler.Filename)
+    uniqueFilename := fmt.Sprintf("%d_%d%s", userID, time.Now().UnixNano(), ext)
+    filePath := filepath.Join(uploadDir, uniqueFilename)
+
+    // Salvar arquivo
+    dst, err := os.Create(filePath)
+    if err != nil {
+        http.Error(w, "Erro ao salvar arquivo", http.StatusInternalServerError)
+        return
+    }
+    defer dst.Close()
+
+    if _, err := io.Copy(dst, file); err != nil {
+        http.Error(w, "Erro ao salvar arquivo", http.StatusInternalServerError)
+        return
+    }
+
+    // Salvar referência no banco de dados
+    _, err = db.Exec("INSERT INTO farm_images (user_id, filename) VALUES (?, ?)", userID, uniqueFilename)
+    if err != nil {
+        os.Remove(filePath) // Remove o arquivo se falhar ao salvar no banco
+        http.Error(w, "Erro ao salvar referência da imagem", http.StatusInternalServerError)
+        return
+    }
+
+    http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+}
+
+// Handler para deletar imagens
+func deleteImagemHandler(w http.ResponseWriter, r *http.Request) {
+    if r.Method != http.MethodPost {
+        http.Error(w, "Método não permitido", http.StatusMethodNotAllowed)
+        return
+    }
+
+    filename := r.FormValue("filename")
+    if filename == "" {
+        http.Error(w, "Nome do arquivo não especificado", http.StatusBadRequest)
+        return
+    }
+
+    // Verificar se o arquivo pertence ao usuário
+    email := getEmailDoUsuario(r)
+    var userID int
+    err := db.QueryRow("SELECT id FROM users WHERE email = ?", email).Scan(&userID)
+    if err != nil {
+        http.Error(w, "Erro ao identificar usuário", http.StatusInternalServerError)
+        return
+    }
+
+    // Verificar se a imagem pertence ao usuário
+    var count int
+    err = db.QueryRow("SELECT COUNT(*) FROM farm_images WHERE user_id = ? AND filename = ?", userID, filename).Scan(&count)
+    if err != nil || count == 0 {
+        http.Error(w, "Imagem não encontrada ou não pertence ao usuário", http.StatusNotFound)
+        return
+    }
+
+    // Excluir do banco de dados
+    _, err = db.Exec("DELETE FROM farm_images WHERE user_id = ? AND filename = ?", userID, filename)
+    if err != nil {
+        http.Error(w, "Erro ao excluir imagem do banco de dados", http.StatusInternalServerError)
+        return
+    }
+
+    // Excluir arquivo
+    filePath := filepath.Join("./static/uploads", filename)
+    if err := os.Remove(filePath); err != nil {
+        log.Println("Aviso: não foi possível excluir o arquivo:", err)
+    }
+
+    http.Redirect(w, r, "/dashboard", http.StatusSeeOther)
+}
+
+// Função para obter imagens do usuário
+func getImagensDoUsuario(email string) ([]string, error) {
+    var imagens []string
+
+    rows, err := db.Query(`
+        SELECT fi.filename 
+        FROM farm_images fi
+        JOIN users u ON fi.user_id = u.id
+        WHERE u.email = ?
+        ORDER BY fi.uploaded_at DESC
+    `, email)
+    if err != nil {
+        return nil, err
+    }
+    defer rows.Close()
+
+    for rows.Next() {
+        var filename string
+        if err := rows.Scan(&filename); err != nil {
+            return nil, err
+        }
+        imagens = append(imagens, filename)
+    }
+
+    return imagens, nil
 }
 
 func initDB() {
@@ -254,14 +407,35 @@ func verificarTokenPage(w http.ResponseWriter, r *http.Request) {
 }
 
 func dashboardPage(w http.ResponseWriter, r *http.Request) {
-	nome := getNomeDoProdutor(r)
-	email := getEmailDoUsuario(r)
-	telefone := getTelefoneDoUsuario(r)
-	nfazenda := getNomeFazendaDoUsuario(r)
-	latitude := getLatitudeDoUsuario(r)
-	longitude := getLongitudeDoUsuario(r)
+    nome := getNomeDoProdutor(r)
+    email := getEmailDoUsuario(r)
+    telefone := getTelefoneDoUsuario(r)
+    nfazenda := getNomeFazendaDoUsuario(r)
+    latitude := getLatitudeDoUsuario(r)
+    longitude := getLongitudeDoUsuario(r)
 
-	renderPage(w, "dashboard.html", PageData{Title: "Dashboard", Nome: nome, Email: email, Telefone: telefone, NFazenda: nfazenda, Longitude: longitude, Latitude: latitude})
+    // Obter imagens do usuário
+    imagens, err := getImagensDoUsuario(email)
+    if err != nil {
+        log.Println("Erro ao buscar imagens:", err)
+        imagens = []string{} // Retorna array vazio em caso de erro
+    }
+
+    data := DashboardData{
+        PageData: PageData{
+            Title:     "Dashboard",
+            Nome:      nome,
+            Email:     email,
+            Telefone:  telefone,
+            NFazenda:  nfazenda,
+            Longitude: longitude,
+            Latitude:  latitude,
+        },
+        Imagens: imagens,
+    }
+
+    tmpl := template.Must(template.ParseFiles("src/dashboard.html"))
+    tmpl.Execute(w, data)
 }
 
 func indexPage(w http.ResponseWriter, r *http.Request) {
@@ -687,6 +861,8 @@ func main() {
 	http.HandleFunc("/logout", logoutHandler)
 
 	// API - Autenticação
+	http.HandleFunc("/delete-imagem", autenticarJWT(deleteImagemHandler))
+	http.HandleFunc("/upload-imagem", autenticarJWT(uploadImagemHandler))
 	http.HandleFunc("/register", registerHandler)
 	http.HandleFunc("/api/login", apiLoginHandler)
 	http.HandleFunc("/api/verificar-token", apiVerificarTokenHandler)

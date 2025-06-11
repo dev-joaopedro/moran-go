@@ -4,6 +4,8 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Moran.go - Dashboard do Produtor</title>
+
+    <!-- CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link
       href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap"
@@ -12,119 +14,158 @@
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-      crossorigin=""
     />
+
     <style>
       body {
         font-family: "Inter", sans-serif;
       }
       #map {
-        height: 400px;
-        width: 100%;
+        height: 500px;
+        border-radius: 1rem;
       }
     </style>
-
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-      const toggleBtn = document.getElementById("menuToggle");
-      const mobileMenu = document.getElementById("mobileMenu");
-
-      if (toggleBtn && mobileMenu) {
-        toggleBtn.addEventListener("click", () => {
-          mobileMenu.classList.toggle("hidden");
-        });
-      }
-
-      const produtorBtn = document.getElementById("produtorBtn");
-      const dropdownMenu = document.getElementById("dropdownMenu");
-
-      if (produtorBtn && dropdownMenu) {
-        produtorBtn.addEventListener("click", () => {
-          dropdownMenu.classList.toggle("hidden");
-        });
-      }
-    });
-    </script>
   </head>
+
   <body class="bg-[#FAF1E6] text-[#4B4B4B] min-h-screen">
     <!-- Header -->
     <header class="sticky top-0 z-[1100] bg-[#FAF1E6] shadow-md">
-  <div class="container mx-auto py-4 px-6 flex items-center justify-between">
-    <!-- LOGO -->
-    <a href="index.html">
-      <div class="flex items-center gap-3">
-        <div class="w-10 h-10 flex items-center justify-center">
-          <figure>
-            <img src="/static/imagens/morango.png" alt="logo morango" />
-          </figure>
-        </div>
-        <h1 class="text-2xl font-bold text-[#2D5D4A]">
-          Moran<span class="text-[#CF4D45]">.go</span>
-        </h1>
-      </div>
-    </a>
+      <div
+        class="container mx-auto py-4 px-6 flex items-center justify-between"
+      >
+        <!-- LOGO -->
+        <a href="/">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 flex items-center justify-center">
+              <figure>
+                <img src="/static/imagens/morango.png" alt="logo morango" />
+              </figure>
+            </div>
+            <h1 class="text-2xl font-bold text-[#2D5D4A]">
+              Moran<span class="text-[#CF4D45]">.go</span>
+            </h1>
+          </div>
+        </a>
 
-    <!-- BOTÃO HAMBURGUER MOBILE -->
-    <button id="menuToggle" class="md:hidden focus:outline-none">
-      <svg class="w-6 h-6 text-[#2D5D4A]" fill="none" stroke="currentColor" stroke-width="2"
-        viewBox="0 0 24 24">
-        <path stroke-linecap="round" stroke-linejoin="round"
-          d="M4 6h16M4 12h16M4 18h16" />
-      </svg>
-    </button>
-
-    <!-- MENU DESKTOP -->
-    <nav
-      class="hidden md:flex items-center gap-4 relative"
-      id="desktopMenu">
-      <a href="#" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Sobre</a>
-      <a href="#sessao-mapa" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Mapa</a>
-      <a href="#sessao-contato" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Contato</a>
-
-      {{ if .Nome }}
-      <!-- DROPDOWN DESKTOP -->
-      <div class="relative" id="produtorMenu">
-        <button id="produtorBtn"
-          class="text-sm text-[#2D5D4A] font-semibold flex items-center gap-1 focus:outline-none">
-          {{.Nome}}
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+        <!-- BOTÃO HAMBURGUER MOBILE -->
+        <button id="menuToggle" class="md:hidden focus:outline-none">
+          <svg
+            class="w-6 h-6 text-[#2D5D4A]"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M4 6h16M4 12h16M4 18h16"
+            />
           </svg>
         </button>
 
-        <div id="dropdownMenu"
-          class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-50">
-          <a href="/dashboard" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Dashboard</a>
-          <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-red-100">Sair</a>
+        <!-- MENU DESKTOP -->
+        <nav
+          class="hidden md:flex items-center gap-4 relative"
+          id="desktopMenu"
+        >
+          <a href="/" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
+            >Início</a
+          >
+          <a
+            href="#sessao-mapa"
+            class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
+            >Mapa</a
+          >
+          <a
+            href="#sessao-contato"
+            class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
+            >Contato</a
+          >
+
+          {{ if .Nome }}
+          <!-- DROPDOWN DESKTOP -->
+          <div class="relative" id="produtorMenu">
+            <button
+              id="produtorBtn"
+              class="text-sm text-[#2D5D4A] font-semibold flex items-center gap-1 focus:outline-none"
+              aria-haspopup="true"
+              aria-expanded="false"
+              type="button"
+            >
+              {{.Nome}}
+              <svg
+                class="w-4 h-4"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M19 9l-7 7-7-7"
+                />
+              </svg>
+            </button>
+            <div
+              id="dropdownMenu"
+              class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-50"
+              tabindex="-1"
+            >
+              <a
+                href="/dashboard"
+                class="block px-4 py-2 text-gray-800 hover:bg-gray-100"
+                >Dashboard</a
+              >
+              <a
+                href="/logout"
+                class="block px-4 py-2 text-red-600 hover:bg-red-100"
+                >Sair</a
+              >
+            </div>
+          </div>
+          {{ else }}
+          <a
+            href="/login"
+            class="px-6 py-3 rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300"
+          >
+            Login do Produtor
+          </a>
+          {{ end }}
+        </nav>
+      </div>
+
+      <!-- MENU MOBILE -->
+      <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
+        <div class="flex flex-col gap-2">
+          <a href="/" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
+            >Início</a
+          >
+          <a
+            href="#sessao-mapa"
+            class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
+            >Mapa</a
+          >
+          <a
+            href="#sessao-contato"
+            class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium"
+            >Contato</a
+          >
+          {{ if .Nome }}
+          <a href="/dashboard" class="text-[#2D5D4A] font-medium">Dashboard</a>
+          <a href="/logout" class="text-red-600 font-medium">Sair</a>
+          {{ else }}
+          <a
+            href="/login"
+            class="block w-full px-6 py-3 text-center rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300"
+          >
+            Login do Produtor
+          </a>
+          {{ end }}
         </div>
       </div>
-      {{ else }}
-      <a href="/login"
-        class="px-6 py-3 rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300">
-        Login do Produtor
-      </a>
-      {{ end }}
-    </nav>
-  </div>
-
-  <!-- MENU MOBILE -->
-  <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
-    <div class="flex flex-col gap-2">
-      <a href="#" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Sobre</a>
-      <a href="#sessao-mapa" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Mapa</a>
-      <a href="#sessao-contato" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Contato</a>
-      {{ if .Nome }}
-      <a href="/dashboard" class="text-[#2D5D4A] font-medium">Dashboard</a>
-      <a href="/logout" class="text-red-600 font-medium">Sair</a>
-      {{ else }}
-      <a href="/login"
-        class="block w-full px-6 py-3 text-center rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300">
-        Login do Produtor
-      </a>
-      {{ end }}
-    </div>
-  </div>
-</header>
+    </header>
 
     <!-- Dashboard Content -->
     <main class="container mx-auto px-6 py-10">
@@ -164,12 +205,13 @@
               required
             />
             <input
-              type="text"
+              type="email"
               name="email"
               placeholder="Email"
               value="{{.Email}}"
               class="px-4 py-3 rounded-lg border border-gray-300"
               required
+              disabled
             />
             <input
               type="text"
@@ -201,7 +243,7 @@
           </form>
         </div>
 
-        <!-- Localização no Mapa -->
+        <!-- Seção do Mapa - Atualizada com funcionalidades completas -->
         <section
           class="bg-white rounded-xl shadow-md p-8"
           aria-label="Localização da Fazenda"
@@ -259,6 +301,72 @@
           </form>
         </section>
 
+        <!-- Leaflet JS -->
+        <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+
+        <script>
+          document.addEventListener("DOMContentLoaded", function () {
+            const latInput = document.getElementById("latitude");
+            const lngInput = document.getElementById("longitude");
+
+            const defaultLat = parseFloat(latInput.value) || -22.230891;
+            const defaultLng = parseFloat(lngInput.value) || -45.936821;
+
+            const map = L.map("map").setView([defaultLat, defaultLng], 13);
+
+            L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+              attribution: "© OpenStreetMap contributors",
+            }).addTo(map);
+
+            let marker;
+            if (!isNaN(defaultLat) && !isNaN(defaultLng)) {
+              marker = L.marker([defaultLat, defaultLng]).addTo(map);
+            }
+
+            map.on("click", function (e) {
+              const { lat, lng } = e.latlng;
+              latInput.value = lat.toFixed(6);
+              lngInput.value = lng.toFixed(6);
+              if (marker) {
+                map.removeLayer(marker);
+              }
+              marker = L.marker([lat, lng]).addTo(map);
+            });
+
+            window.usarLocalizacaoAtual = function () {
+              if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(
+                  function (position) {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    latInput.value = lat.toFixed(6);
+                    lngInput.value = lng.toFixed(6);
+                    map.setView([lat, lng], 15);
+                    if (marker) {
+                      map.removeLayer(marker);
+                    }
+                    marker = L.marker([lat, lng]).addTo(map);
+                  },
+                  function (error) {
+                    console.error("Erro na geolocalização:", error);
+                    alert(
+                      "Não foi possível obter sua localização. Erro: " +
+                        error.message
+                    );
+                  },
+                  {
+                    enableHighAccuracy: true,
+                    timeout: 5000,
+                    maximumAge: 0,
+                  }
+                );
+              } else {
+                alert("Geolocalização não é suportada pelo seu navegador.");
+              }
+            };
+          });
+        </script>
+
         <!-- Upload de Imagens da Fazenda -->
         <div class="bg-white rounded-xl shadow-md p-8 mt-10">
           <h3 class="text-xl font-bold text-[#2D5D4A] mb-4">
@@ -274,8 +382,9 @@
               <label
                 class="block mb-2 text-sm font-medium text-gray-700"
                 for="imagem"
-                >Selecionar imagem:</label
               >
+                Selecionar imagem:
+              </label>
               <input
                 type="file"
                 name="imagem"
@@ -294,15 +403,46 @@
               </button>
             </div>
           </form>
-
-          <!-- Pré-visualização ou galeria futura -->
+          
+          <!-- Galeria de imagens -->
           <div class="mt-6 grid grid-cols-2 md:grid-cols-4 gap-4">
             {{ range .Imagens }}
-            <img
-              src="/static/uploads/{{.}}"
-              alt="Imagem da Fazenda"
-              class="rounded-lg shadow-md w-full h-40 object-cover"
-            />
+            <div class="relative group">
+              <img
+                src="/static/uploads/{{.}}"
+                alt="Imagem da Fazenda"
+                class="rounded-lg shadow-md w-full h-40 object-cover"
+              />
+              <!-- Botão de exclusão -->
+              <form
+                method="POST"
+                action="/delete-imagem"
+                class="absolute top-2 right-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
+                onsubmit="return confirm('Tem certeza que deseja excluir esta imagem?');"
+              >
+                <input type="hidden" name="filename" value="{{.}}" />
+                <button
+                  type="submit"
+                  class="bg-red-500 text-white p-2 rounded-full hover:bg-red-600 transition-colors"
+                  aria-label="Excluir imagem"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    class="h-4 w-4"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"
+                    />
+                  </svg>
+                </button>
+              </form>
+            </div>
             {{ else }}
             <p class="text-sm text-gray-500 col-span-full">
               Nenhuma imagem enviada ainda.
@@ -313,57 +453,57 @@
       </div>
     </main>
 
-    <!-- Scripts -->
-    <script
-      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
-      crossorigin=""
-    ></script>
-    <script>
-      document.addEventListener("DOMContentLoaded", function () {
-        const latInput = document.getElementById("latitude");
-        const lngInput = document.getElementById("longitude");
+    <!-- Footer -->
+    <footer id="sessao-contato" class="bg-[#2D5D4A] text-white py-10">
+      <div class="container mx-auto px-6">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div>
+            <h3 class="text-xl font-bold mb-4">
+              Moran<span class="text-[#CF4D45]">.go</span>
+            </h3>
+            <p class="text-sm text-gray-300">
+              Conectando produtores e consumidores de morangos de forma direta e
+              sustentável.
+            </p>
+          </div>
 
-        const defaultLat = parseFloat(latInput.value) || -22.230891;
-        const defaultLng = parseFloat(lngInput.value) || -45.936821;
+          <div>
+            <h3 class="text-lg font-bold mb-4">Links Úteis</h3>
+            <ul class="space-y-2">
+              <li>
+                <a href="#" class="text-sm text-gray-300 hover:text-white"
+                  >Sobre nós</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-sm text-gray-300 hover:text-white"
+                  >Termos de uso</a
+                >
+              </li>
+              <li>
+                <a href="#" class="text-sm text-gray-300 hover:text-white"
+                  >Política de privacidade</a
+                >
+              </li>
+            </ul>
+          </div>
 
-        const map = L.map("map").setView([defaultLat, defaultLng], 10);
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          attribution: "© OpenStreetMap contributors",
-        }).addTo(map);
+          <div>
+            <h3 class="text-lg font-bold mb-4">Contato</h3>
+            <ul class="space-y-2">
+              <li class="text-sm text-gray-300">contato@morango.com.br</li>
+              <li class="text-sm text-gray-300">(35) 99999-9999</li>
+            </ul>
+          </div>
+        </div>
 
-        let marker;
-
-        function updateMarker(lat, lng) {
-          if (marker) map.removeLayer(marker);
-          marker = L.marker([lat, lng]).addTo(map);
-          map.setView([lat, lng], 14);
-        }
-
-        if (!isNaN(defaultLat) && !isNaN(defaultLng)) {
-          updateMarker(defaultLat, defaultLng);
-        }
-
-        map.on("click", function (e) {
-          const { lat, lng } = e.latlng;
-          latInput.value = lat.toFixed(6);
-          lngInput.value = lng.toFixed(6);
-          updateMarker(lat, lng);
-        });
-
-        window.usarLocalizacaoAtual = function () {
-          if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition((pos) => {
-              const lat = pos.coords.latitude.toFixed(6);
-              const lng = pos.coords.longitude.toFixed(6);
-              latInput.value = lat;
-              lngInput.value = lng;
-              updateMarker(parseFloat(lat), parseFloat(lng));
-            });
-          } else {
-            alert("Geolocalização não suportada pelo navegador.");
-          }
-        };
-      });
-    </script>
+        <div
+          class="border-t border-gray-700 mt-8 pt-6 text-center text-sm text-[#FAF1E6]"
+        >
+          <p>© 2023 Moran.go - Todos os direitos reservados</p>
+        </div>
+      </div>
+    </footer>
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
   </body>
 </html>

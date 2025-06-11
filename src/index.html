@@ -100,39 +100,45 @@
       </svg>
     </button>
 
-    <!-- MENU DESKTOP -->
-    <nav
-      class="hidden md:flex items-center gap-4 relative"
-      id="desktopMenu">
-      <a href="#" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Sobre</a>
-      <a href="#sessao-mapa" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Mapa</a>
-      <a href="#sessao-contato" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Contato</a>
+  <nav
+  class="hidden md:flex items-center gap-4 relative"
+  id="desktopMenu">
+  <a href="#" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Sobre</a>
+  <a href="#sessao-mapa" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Mapa</a>
+  <a href="#sessao-contato" class="text-[#4B4B4B] hover:text-[#2D5D4A] font-medium">Contato</a>
 
-      {{ if .Nome }}
-      <!-- DROPDOWN DESKTOP -->
-      <div class="relative" id="produtorMenu">
-        <button id="produtorBtn"
-          class="text-sm text-[#2D5D4A] font-semibold flex items-center gap-1 focus:outline-none">
-          {{.Nome}}
-          <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-
-        <div id="dropdownMenu"
-          class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-50">
-          <a href="/dashboard" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Dashboard</a>
-          <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-red-100">Sair</a>
-        </div>
-      </div>
-      {{ else }}
-      <a href="/login"
-        class="px-6 py-3 rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300">
-        Login do Produtor
-      </a>
-      {{ end }}
-    </nav>
+  {{ if .Nome }}
+  <!-- DROPDOWN DESKTOP -->
+  <div class="relative" id="produtorMenu">
+    <button
+      id="produtorBtn"
+      class="text-sm text-[#2D5D4A] font-semibold flex items-center gap-1 focus:outline-none"
+      aria-haspopup="true"
+      aria-expanded="false"
+      type="button"
+    >
+      {{.Nome}}
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M19 9l-7 7-7-7" />
+      </svg>
+    </button>
+    <div
+      id="dropdownMenu"
+      class="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg border border-gray-200 hidden z-50"
+      tabindex="-1"
+    >
+      <a href="/dashboard" class="block px-4 py-2 text-gray-800 hover:bg-gray-100">Dashboard</a>
+      <a href="/logout" class="block px-4 py-2 text-red-600 hover:bg-red-100">Sair</a>
+    </div>
   </div>
+  {{ else }}
+  <a href="/login"
+    class="px-6 py-3 rounded-lg font-semibold border-2 border-[#2D5D4A] text-[#2D5D4A] hover:bg-[#2D5D4A] hover:text-white transition duration-300">
+    Login do Produtor
+  </a>
+  {{ end }}
+</nav>
+
 
   <!-- MENU MOBILE -->
   <div id="mobileMenu" class="md:hidden hidden px-6 pb-4">
@@ -625,36 +631,81 @@
 
   <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <script>
-    // Inicializar o mapa
-    var map = L.map("map").setView([-22.230891, -45.936821], 10);
+  // Inicializar o mapa
+  var map = L.map("map").setView([-22.230891, -45.936821], 10);
 
-    L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-      attribution: "© OpenStreetMap contributors",
-    }).addTo(map);
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors",
+  }).addTo(map);
 
-    let currentIndex = 0;
-    const carousel = document.getElementById("carousel");
-    const totalSlides = carousel.children.length;
+  // Função para adicionar marcadores
+  function addProducersToMap(producers) {
+    producers.forEach(producer => {
+      // Criar um marcador personalizado
+      const marker = L.marker([producer.latitude, producer.longitude], {
+        icon: L.divIcon({
+          className: 'custom-marker',
+          html: `<div style="background-color: #CF4D45; width: 24px; height: 24px; display: flex; align-items: center; justify-content: center; border-radius: 50%; color: white; font-weight: bold;">${producer.name.charAt(0)}</div>`,
+          iconSize: [24, 24]
+        })
+      }).addTo(map);
 
-    function updateSlide() {
-      const slideWidth = carousel.children[0].clientWidth;
-      carousel.style.transform = `translateX(-${currentIndex * slideWidth
-        }px)`;
+      // Adicionar popup com informações
+      marker.bindPopup(`
+        <div class="p-2">
+          <h3 class="font-bold text-brand-primary">${producer.name}</h3>
+          <p class="text-sm">${producer.description || 'Produtor de morangos'}</p>
+          <p class="text-xs mt-1"><strong>Localização:</strong> ${producer.location}</p>
+          <a href="/producer/${producer.id}" class="text-xs text-brand-primary hover:underline">Ver detalhes</a>
+        </div>
+      `);
+    });
+  }
+
+  // Carregar os produtores (via AJAX ou dados embutidos)
+  async function loadProducers() {
+    try {
+      // Substitua esta URL pelo endpoint real da sua API
+      const response = await fetch('/api/producers');
+      const producers = await response.json();
+      addProducersToMap(producers);
+      
+      // Ajustar a visualização do mapa para mostrar todos os marcadores
+      if (producers.length > 0) {
+        const group = new L.featureGroup(producers.map(p => 
+          L.marker([p.latitude, p.longitude])));
+        map.fitBounds(group.getBounds().pad(0.2));
+      }
+    } catch (error) {
+      console.error("Erro ao carregar produtores:", error);
     }
+  }
 
-    function nextSlide() {
-      currentIndex = (currentIndex + 1) % totalSlides;
-      updateSlide();
-    }
+  // Chamar a função de carregamento
+  loadProducers();
 
-    function prevSlide() {
-      currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
-      updateSlide();
-    }
+  // Restante do seu código (carrossel, etc.)
+  let currentIndex = 0;
+  const carousel = document.getElementById("carousel");
+  const totalSlides = carousel.children.length;
 
-    // (Opcional) Autoplay a cada 6s
-    setInterval(nextSlide, 6000);
-  </script>
+  function updateSlide() {
+    const slideWidth = carousel.children[0].clientWidth;
+    carousel.style.transform = `translateX(-${currentIndex * slideWidth}px)`;
+  }
+
+  function nextSlide() {
+    currentIndex = (currentIndex + 1) % totalSlides;
+    updateSlide();
+  }
+
+  function prevSlide() {
+    currentIndex = (currentIndex - 1 + totalSlides) % totalSlides;
+    updateSlide();
+  }
+
+  setInterval(nextSlide, 6000);
+</script>
 
   <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
   <script>
@@ -728,6 +779,45 @@
       }
     });
   </script>
-</body>
 
+  <script>
+document.addEventListener("DOMContentLoaded", function () {
+  // Dropdown do usuário (desktop)
+  const produtorBtn = document.getElementById("produtorBtn");
+  const dropdownMenu = document.getElementById("dropdownMenu");
+
+  if (produtorBtn && dropdownMenu) {
+    produtorBtn.addEventListener("click", function (e) {
+      e.stopPropagation();
+      const isHidden = dropdownMenu.classList.toggle("hidden");
+      produtorBtn.setAttribute("aria-expanded", !isHidden);
+    });
+
+    // Fecha o dropdown ao clicar fora
+    document.addEventListener("click", function (event) {
+      if (!dropdownMenu.classList.contains("hidden")) {
+        if (
+          !produtorBtn.contains(event.target) &&
+          !dropdownMenu.contains(event.target)
+        ) {
+          dropdownMenu.classList.add("hidden");
+          produtorBtn.setAttribute("aria-expanded", "false");
+        }
+      }
+    });
+
+    // Fecha o dropdown com ESC
+    document.addEventListener("keydown", function (event) {
+      if (
+        event.key === "Escape" &&
+        !dropdownMenu.classList.contains("hidden")
+      ) {
+        dropdownMenu.classList.add("hidden");
+        produtorBtn.setAttribute("aria-expanded", "false");
+      }
+    });
+  }
+});
+</script>
+</body>
 </html>
