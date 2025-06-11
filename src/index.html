@@ -660,30 +660,15 @@
       `);
       });
     }
+    function adicionarPin(map, latitude, longitude, mensagem) {
+  var marker = L.marker([latitude, longitude]).addTo(map);
+  if (mensagem) {
+    marker.bindPopup(mensagem).openPopup();
+  }
+}
+adicionarPin(map, -22.222916, -45.950942, "<b>Produtor A</b><br>Fazenda exemplo");
 
-    // Carregar os produtores (via AJAX ou dados embutidos)
-    async function loadProducers() {
-      try {
-        // Substitua esta URL pelo endpoint real da sua API
-        const response = await fetch('/api/producers');
-        const producers = await response.json();
-        addProducersToMap(producers);
-
-        // Ajustar a visualização do mapa para mostrar todos os marcadores
-        if (producers.length > 0) {
-          const group = new L.featureGroup(producers.map(p =>
-            L.marker([p.latitude, p.longitude])));
-          map.fitBounds(group.getBounds().pad(0.2));
-        }
-      } catch (error) {
-        console.error("Erro ao carregar produtores:", error);
-      }
-    }
-
-    // Chamar a função de carregamento
-    loadProducers();
-
-    // Restante do seu código (carrossel, etc.)
+// Restante do seu código (carrossel, etc.)
     let currentIndex = 0;
     const carousel = document.getElementById("carousel");
     const totalSlides = carousel.children.length;
