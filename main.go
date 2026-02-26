@@ -354,8 +354,8 @@ func gerarToken6Digitos() string {
 func enviarEmailComCodigo(destinatario, codigo string) error {
 	smtpHost := "smtp.gmail.com"
 	smtpPort := "587"
-	username := "jjooaaoo46@gmail.com"
-	password := "mork fxry lwpi dkiw"
+	username := "seuemail"
+	password := "senha de app"
 
 	from := username
 	to := []string{destinatario}
